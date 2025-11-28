@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Bank Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --neon-cyan: #00f5ff;
+            --neon-magenta: #ff00ff;
+            --neon-yellow: #f0ff00;
+            --text-primary: #e0e0e0;
+            --text-secondary: #888;
+            --border-color: #2a2a3a;
+            --success: #00ff88;
+            --error: #ff3366;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(ellipse at 20% 80%, rgba(0, 245, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 0, 255, 0.08) 0%, transparent 50%),
+                linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 4px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta));
+        }
+
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .card-title::before {
+            content: '// ';
+            color: var(--neon-magenta);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
+        }
+
+        select option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        button {
+            padding: 12px 24px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-cyan), #00a8b3);
+            color: var(--bg-primary);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 25px rgba(0, 245, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #00b360);
+            color: var(--bg-primary);
+            flex: 1;
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error), #cc2952);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 0 25px rgba(255, 51, 102, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            color: var(--neon-magenta);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .table-title::before {
+            content: '// ';
+            color: var(--neon-cyan);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--success); }
+            50% { opacity: 0.5; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--bg-secondary);
+            padding: 14px 25px;
+            text-align: left;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        td {
+            padding: 16px 25px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1rem;
+        }
+
+        tr:hover {
+            background: rgba(0, 245, 255, 0.03);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .balance-cell {
+            font-family: 'Orbitron', monospace;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-secondary);
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+            min-width: 280px;
+        }
+
+        .toast-success {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .toast-error {
+            background: rgba(255, 51, 102, 0.15);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8rem; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Neon Bank Dashboard</h1>
+        </header>
+
+        <div class="grid">
+            <!-- Create Account -->
+            <div class="card">
+                <h2 class="card-title">Create Account</h2>
+                <form id="createForm">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="name" placeholder="Account holder name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Initial Balance</label>
+                        <input type="number" id="balance" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Create</button>
+                </form>
+            </div>
+
+            <!-- Transaction Panel -->
+            <div class="card">
+                <h2 class="card-title">Transaction Panel</h2>
+                <div class="form-group">
+                    <label>Select Account</label>
+                    <select id="accountSelect">
+                        <option value="">-- Select an account --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="amount" placeholder="0.00" step="0.01" min="0.01">
+                </div>
+                <div class="btn-group">
+                    <button class="btn-success" onclick="deposit()">Deposit</button>
+                    <button class="btn-danger" onclick="withdraw()">Withdraw</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Accounts Table -->
+        <div class="table-card">
+            <div class="table-header">
+                <h2 class="table-title">Live Accounts</h2>
+                <span><span class="status-dot"></span>Live</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Account Holder Name</th>
+                        <th>Current Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="accountsTable">
+                    <tr><td colspan="2" class="empty-state">No accounts registered</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const API = '/api/accounts';
+        let accounts = [];
+
+        function showToast(msg, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = msg;
+            document.getElementById('toastContainer').appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        async function fetchAccounts() {
+            try {
+                const res = await fetch(API);
+                accounts = await res.json();
+                renderTable();
+                renderDropdown();
+            } catch (e) {
+                showToast('Failed to load accounts', 'error');
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('accountsTable');
+            if (accounts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" class="empty-state">No accounts registered</td></tr>';
+                return;
+            }
+            tbody.innerHTML = accounts.map(a => `
+                <tr>
+                    <td>${a.accountHolderName}</td>
+                    <td class="balance-cell">$${a.balance.toFixed(2)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderDropdown() {
+            const select = document.getElementById('accountSelect');
+            select.innerHTML = '<option value="">-- Select an account --</option>' +
+                accounts.map(a => `<option value="${a.id}">${a.accountHolderName}</option>`).join('');
+        }
+
+        document.getElementById('createForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const balance = parseFloat(document.getElementById('balance').value);
+            try {
+                const res = await fetch(API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, balance })
+                });
+                if (!res.ok) throw new Error();
+                showToast('Account created');
+                document.getElementById('createForm').reset();
+                fetchAccounts();
+            } catch (e) {
+                showToast('Failed to create account', 'error');
+            }
+        });
+
+        async function deposit() {
+            const id = document.getElementById('accountSelect').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (!id || !amount) return showToast('Select account and enter amount', 'error');
+            try {
+                const res = await fetch(`${API}/${id}/deposit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount })
+                });
+                if (!res.ok) throw new Error();
+                showToast(`Deposited $${amount.toFixed(2)}`);
+                document.getElementById('amount').value = '';
+                fetchAccounts();
+            } catch (e) {
+                showToast('Deposit failed', 'error');
+            }
+        }
+
+        async function withdraw() {
+            const id = document.getElementById('accountSelect').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (!id || !amount) return showToast('Select account and enter amount', 'error');
+            try {
+                const res = await fetch(`${API}/${id}/withdraw`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount })
+                });
+                if (!res.ok) throw new Error('Insufficient funds');
+                showToast(`Withdrew $${amount.toFixed(2)}`);
+                document.getElementById('amount').value = '';
+                fetchAccounts();
+            } catch (e) {
+                showToast(e.message || 'Withdrawal failed', 'error');
+            }
+        }
+
+        fetchAccounts();
+    </script>
+</body>
+</html>
+
